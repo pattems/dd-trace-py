@@ -1020,6 +1020,24 @@ class NativeWriter(periodic.PeriodicService, TraceWriter, AgentWriterInterface):
         except Exception:  # nosec B110 - destructors must not raise
             pass
 
+    @staticmethod
+    def _parse_otlp_headers(raw: str) -> list:
+        """Parse OTEL_EXPORTER_OTLP_*_HEADERS into key-value pairs.
+
+        TODO: This parsing will move into libdatadog once header handling is supported natively.
+        The current split-on-comma approach does not handle percent-encoded commas (%2C) in header
+        values per the OTEL spec; that edge case will be handled correctly on the libdatadog side.
+        """
+        if not raw:
+            return []
+        headers = []
+        for item in raw.split(","):
+            key, sep, value = item.partition("=")
+            key = key.strip()
+            if sep and key:
+                headers.append((key, value.strip()))
+        return headers
+
     @property
     def agentless(self) -> bool:
         return self._api_key is not None
