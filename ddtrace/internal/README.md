@@ -6,6 +6,12 @@ These modules are not intended to be used outside of `ddtrace`.
 The APIs found within `ddtrace.internal` are subject to breaking changes at any time
 and do not follow the semver versioning scheme of the `ddtrace` package.
 
+## HTTP endpoint normalization
+
+`ddtrace.internal.utils.endpoint.SimplifiedEndpointComputer` normalizes URL paths
+for both tracing resource names and API Security endpoint grouping. It operates on
+URLs independently of span processing.
+
 ## Coverage collection contexts
 
 `ModuleCodeCollector.CollectInContext` owns the line and file coverage for one
